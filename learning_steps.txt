@@ -11,6 +11,7 @@ fork the master repository in your profile, and import in vscode.
 
 install azure resource mananger extension in vs code.
 install bicep extension in vscode.
+Also check terraform versus bicep IAC differences and benefits.
 
 ARM template will have below resources. Add one by one manually.
 
