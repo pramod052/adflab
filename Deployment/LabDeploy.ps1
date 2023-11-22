@@ -49,24 +49,40 @@ $sqlServerName =  $ARMOutput.Outputs.sqlServerName.value
 
 #get storage account reference
 #$storageAccount = Get-AzureRMStorageAccount -ResourceGroupName $resourceGroupName -AccountName $storageName
-Set-AzureRmCurrentStorageAccount -StorageAccountName $storageName -ResourceGroupName $resourceGroupName
+#Set-AzureRmCurrentStorageAccount -StorageAccountName $storageName -ResourceGroupName $resourceGroupName
+az storage account blob-service-properties update --account-name $storageName --resource-group $resourceGroupName
 
 #create containers
-"input output blobsource backups".Split()| New-AzureStorageContainer -Permission Container
+#"input output blobsource backups".Split()| New-AzureStorageContainer -Permission Container
+"input output blobsource backups".Split()| az storage container create
 
 #upload files to blobsource container
-Set-AzureStorageBlobContent -File "Files\blobsource\AcftRef.txt" -Container "blobsource" -Blob "AcftRef.txt" -Force
-Set-AzureStorageBlobContent -File "Files\blobsource\DimDate.csv" -Container "blobsource" -Blob "DimDate.csv" -Force
-Set-AzureStorageBlobContent -File "Files\blobsource\MASTER201612.csv" -Container "blobsource" -Blob "MASTER201612.csv" -Force
+#Set-AzureStorageBlobContent -File "Files\blobsource\AcftRef.txt" -Container "blobsource" -Blob "AcftRef.txt" -Force
+#Set-AzureStorageBlobContent -File "Files\blobsource\DimDate.csv" -Container "blobsource" -Blob "DimDate.csv" -Force
+#Set-AzureStorageBlobContent -File "Files\blobsource\MASTER201612.csv" -Container "blobsource" -Blob "MASTER201612.csv" -Force
+
+az storage blob upload -c "blobsource" -f "AcftRef.txt" 
+az storage blob upload -c "blobsource" -f "DimDate.csv" 
+az storage blob upload -c "blobsource" -f "MASTER201612.csv" 
 
 #upload files to input container
-Set-AzureStorageBlobContent -File "Files\input\FAAMerge.hql" -Container "input" -Blob "FAAMerge.hql" -Force
-Set-AzureStorageBlobContent -File ".\Files\input\FAAMaster\FAAmaster.txt" -Container "input" -Blob "FAAmaster\FAAmaster.txt" -Force
-Set-AzureStorageBlobContent -File ".\Files\input\FAAaircraft\FAAaircraft.txt" -Container "input" -Blob "FAAaircraft\FAAaircraft.txt" -Force
+#Set-AzureStorageBlobContent -File "Files\input\FAAMerge.hql" -Container "input" -Blob "FAAMerge.hql" -Force
+#Set-AzureStorageBlobContent -File ".\Files\input\FAAMaster\FAAmaster.txt" -Container "input" -Blob "FAAmaster\FAAmaster.txt" -Force
+#Set-AzureStorageBlobContent -File ".\Files\input\FAAaircraft\FAAaircraft.txt" -Container "input" -Blob "FAAaircraft\FAAaircraft.txt" -Force
+
+az storage blob upload -c "input" -f "Files\input\FAAMerge.hql" 
+az storage blob upload -c "input" -f ".\Files\input\FAAMaster\FAAmaster.txt" 
+az storage blob upload -c "input" -f ".\Files\input\FAAaircraft\FAAaircraft.txt" 
+
 
 #upload bacpacs to backups container for SQL Import
 Set-AzureStorageBlobContent -File "Files\backups\AirlinePerformance-OLTP.bacpac" -Container "backups" -Blob "AirlinePerformance-OLTP.bacpac" -Force
 Set-AzureStorageBlobContent -File ".\Files\backups\AirlinePerformance-ODS.bacpac" -Container "backups" -Blob "AirlinePerformance-ODS.bacpac" -Force
+
+az storage blob upload -c "backups" -f "Files\backups\AirlinePerformance-OLTP.bacpac" 
+az storage blob upload -c "backups" -f ".\Files\backups\AirlinePerformance-ODS.bacpac" 
+
+
 
 #restore DBs to sql server
 $importRequest = New-AzureRmSqlDatabaseImport -ResourceGroupName $resourceGroupName `
