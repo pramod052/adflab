@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageSKU" { 
+            "type" : "string",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Premium_LRS"
+            ],
+            "defaultValue": "Standard_LRS",
+            "metadata": {
+               "description": "The type of replication to use for storage account"
+            }
+
+        },
+        "labnameprefix" {
+            "type" : "string",
+            "maxLength": 8,
+            "defaultValue": "adflab696337",
+            "metadata": {
+                "description": "default value to be prefixed for all lab resources"
+            }
+        },
+        
+        "sqlusername": {
+            "type": "string"
+        }
+
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [],
+    "outputs": {}
+}

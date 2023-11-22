@@ -8,3 +8,19 @@ Powershell script: LabDeploy.ps1
 VS Code - > to connect to code repository 
 
 fork the master repository in your profile, and import in vscode.
+
+install azure resource mananger extension in vs code.
+install bicep extension in vscode.
+
+ARM template will have below resources. Add one by one manually.
+
+Practice creating ARM template manually by editing for practicing JSON/ARM templates.
+    "parameters": {},
+    "functions": [],
+    "variables": {},
+    "resources": [],
+    "outputs": {}
+
+    “SKU” stands for “Stock Keeping Unit.” 
+    It refers to a specific version or offering of a resource that is available in Azure
+
