@@ -1,0 +1,10 @@
+
+Azure data factory for ETL processing. 
+Azure synapse analytics for Data analysis.
+
+ARM template script: LabARM.json
+Powershell script: LabDeploy.ps1
+
+VS Code - > to connect to code repository 
+
+fork the master repository in your profile, and import in vscode.
