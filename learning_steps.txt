@@ -25,3 +25,18 @@ Practice creating ARM template manually by editing for practicing JSON/ARM templ
     “SKU” stands for “Stock Keeping Unit.” 
     It refers to a specific version or offering of a resource that is available in Azure
 
+install az -AllowClobber to install binaries for Azure cli.
+    if ($PSVersionTable.PSEdition -eq 'Desktop' -and (Get-Module -Name AzureRM -ListAvailable)) {
+    Write-Warning -Message ('Az module not installed. Having both the AzureRM and ' +
+      'Az modules installed at the same time is not supported.')
+} else {
+    Install-Module -Name Az -AllowClobber -Scope CurrentUser
+}
+
+Also , if you want to run ps1 powershell script in powershell ISE or you can run in vscode as well.
+Only you need to install 2 extensions in vscode.
+1. azure tools 
+2. powershell extension,
+
+so you can configure azure account in azoure tools extension and run powershell script.
+
