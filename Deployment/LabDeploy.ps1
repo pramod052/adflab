@@ -3,8 +3,8 @@
 Install-Module -Name SqlServer -Scope CurrentUser
 
 #Prompt for Azure credentials
-#Login-AzureRmAccount
-Connect-AzAccount
+#Login-AzureRmAccount OLD CMDLET
+Connect-AzAccount -Tenant '95afe70e-5759-43b7-b416-93add74067a9' -SubscriptionId '35c2406e-c768-4f50-b56e-4a298d5b4344'
 
 #configurations - FILL OUT WITH DESIRED VALUES
 $dir = "C:\Users\vmadmin\Desktop\adflab\Deployment"        #Working directory of where your LabDeploy.ps1 file is located
@@ -16,8 +16,10 @@ $sqlPassword = "L@bP@ss01"                  #SqlServer admin password
 $logicAppEmail = "prmdgaik@gmail.com"          #O365 Account to send emails for lab
 $subscriptionName = "Microsoft Engagements" #Name of subscription to use for deployment
 
-#Set subscription
-Get-AzureRmSubscription –SubscriptionName $subscriptionName | Select-AzureRmSubscription
+#Set subscription OLD CMDLET
+#Get-AzureRmSubscription –SubscriptionName $subscriptionName | Select-AzureRmSubscription
+
+Set-AzureSubscription -SubscriptionId '35c2406e-c768-4f50-b56e-4a298d5b4344'
 
 #local variables
 $RGnotExist = 0
@@ -26,15 +28,20 @@ $RGnotExist = 0
 Set-Location $dir
 
 #check if resource group exist
-Get-AzureRmResourceGroup -Name $resourceGroupName -ev RGnotExist -ea 0
+#Get-AzureRmResourceGroup -Name $resourceGroupName -ev RGnotExist -ea 0
+Find-AzureRmResource -ResourceGroupNameContains "$resourceGroupName"
+
 if ($RGnotExist)
 {
     #create resource group
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
+    #New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
+    az group create -l $location -n $resourceGroupName
 }
 
 #deploy ARM template
-$ARMOutput = New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile LabARM.json -labNamePrefix $labNamePrefix -sqlUsername $sqlUsername -sqlPassword $sqlPassword -logicAppEmail $logicAppEmail
+#$ARMOutput = New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile LabARM.json -labNamePrefix $labNamePrefix -sqlUsername $sqlUsername -sqlPassword $sqlPassword -logicAppEmail $logicAppEmail
+
+$ARMOutput = az deployment group create --resource-group $resourceGroupName --template-file LabARM.json -labNamePrefix $labNamePrefix -sqlUsername $sqlUsername -sqlPassword $sqlPassword -logicAppEmail $logicAppEmail
 
 #ARM template outputs
 $storageName = $ARMOutput.Outputs.storageName.value

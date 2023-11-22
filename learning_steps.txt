@@ -40,3 +40,16 @@ Only you need to install 2 extensions in vscode.
 
 so you can configure azure account in azoure tools extension and run powershell script.
 
+Migrate Azure PowerShell from AzureRM to Az
+https://go.microsoft.com/fwlink/?linkid=2202029 
+
+Install-Module -Name Az.Tools.Migration
+
+New-AzUpgradeModulePlan -FromAzureRmVersion 2.13.2 -ToAzVersion 11.0.0 -DirectoryPath 'C:\Users\vmadmin\Desktop\adflab\Deployment\scripts' -OutVariable Plan
+
+C:\Users\vmadmin\Desktop\adflab\Deployment\scripts
+
+ Get-InstalledModule -Name "Az"
+
+Connect-AzAccount -Tenant '95afe70e-5759-43b7-b416-93add74067a9' -SubscriptionId '35c2406e-c768-4f50-b56e-4a298d5b4344'
+
