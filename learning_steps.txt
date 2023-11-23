@@ -136,5 +136,37 @@ ODS is Pre-Processing database -> To Load data directly from Externl sources.
 Processing into -> Staging Database.
 Store in DW database.
 
+To connect to database, use entire end point. 
+adflabsqlu6yr4.database.windows.net
+
+and also create private access link in SQL Datbase server engine to the VPN on which Virtual machine is present.
+
+Private endpoint connections
+
+Filter by name...
+JSON View
+Resource group(move)
+adflab-test
+Location
+East US
+Subscription(move)
+Free Trial
+Subscription ID
+35c2406e-c768-4f50-b56e-4a298d5b4344
+Provisioning state
+Succeeded
+Virtual network/subnet
+azureproject-vnet/default
+Network interface
+ssms-nic
+Private link resource
+adflabsqlu6yr4
+Target sub-resource
+sqlServer
+Connection status
+Approved
+Request/Response
+Auto-approved
+
 
 
