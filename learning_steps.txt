@@ -97,3 +97,20 @@ At line:1 char:1
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : ParserError: (:) [Invoke-Sqlcmd], BatchParserException
     + FullyQualifiedErrorId : ExecutionFailureException,Microsoft.SqlServer.Management.PowerShell.GetScriptCommand
+
+
+Issue Number 4:
+
+Below logic needs to be tested again. 
+
+$importStatus = Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+
+write-host "import status" $importStatus
+
+while ($importStatus.Status -eq "InProgress")
+{
+#    $importStatus = Get-AzureRmSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+    $importStatus = Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+    Write-Host -NoNewLine "."
+    Start-Sleep -s 5
+}
