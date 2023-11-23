@@ -114,3 +114,14 @@ while ($importStatus.Status -eq "InProgress")
     Write-Host -NoNewLine "."
     Start-Sleep -s 5
 }
+
+Decompile from JSON to Bicep
+
+For converting existing ARM templates, we can decomplile JSON into BICEP using AZ command as below.
+
+az bicep decompile --file main.json
+
+But there is high chance that conversion may fail.
+
+
+
