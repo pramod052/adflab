@@ -128,5 +128,8 @@ az bicep decompile --file main.json
 
 But there is high chance that conversion may fail.
 
+All the above issues are resolved now, entire script is working is fine without issues. 
+
+Now install SSMS (SQL server management studio on jumpbox).
 
 
