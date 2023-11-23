@@ -70,6 +70,8 @@ C:\Users\vmadmin\Desktop\adflab\Deployment\scripts
 
 Connect-AzAccount -Tenant '95afe70e-5759-43b7-b416-93add74067a9' -SubscriptionId '35c2406e-c768-4f50-b56e-4a298d5b4344'
 
+Issue Number 2:
+
 Below 2 variable values were not populated , please troubleshoot on same.
 $ARMOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile LabARM.json -labNamePrefix $labNamePrefix -sqlUsername $sqlUsername -sqlPassword $sqlPassword -logicAppEmail $logicAppEmail
 
@@ -77,3 +79,21 @@ $ARMOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName
 $storageName = $ARMOutput.Outputs.storageName.value
 $sqlServerName =  $ARMOutput.Outputs.sqlServerName.value
 
+Issue Number 3:
+
+Invoke-Sqlcmd -inputFile "CreateAzureDW.sql" -ServerInstance "adflabsqlu6yr4.database.windows.net" -Database "AirlinePerformance-DW" -Username $sqlUsername -Password $sqlPassword
+
+Invoke-Sqlcmd : Cannot open database "AirlinePerformance-DW" requested by the login. The login failed.
+Login failed for user 'labadmin'.
+At line:1 char:1
++ Invoke-Sqlcmd -inputFile "CreateAzureDW.sql" -ServerInstance "adflabs ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [Invoke-Sqlcmd], SqlException
+    + FullyQualifiedErrorId : SqlExceptionError,Microsoft.SqlServer.Management.PowerShell.GetScriptCommand
+ 
+Invoke-Sqlcmd : Incorrect syntax was encountered while parsing 'EXEC sp_addrolemember @rolename = N'largerc', @membername = N'DWLoadUser''.
+At line:1 char:1
++ Invoke-Sqlcmd -inputFile "CreateAzureDW.sql" -ServerInstance "adflabs ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ParserError: (:) [Invoke-Sqlcmd], BatchParserException
+    + FullyQualifiedErrorId : ExecutionFailureException,Microsoft.SqlServer.Management.PowerShell.GetScriptCommand
