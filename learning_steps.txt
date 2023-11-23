@@ -70,3 +70,10 @@ C:\Users\vmadmin\Desktop\adflab\Deployment\scripts
 
 Connect-AzAccount -Tenant '95afe70e-5759-43b7-b416-93add74067a9' -SubscriptionId '35c2406e-c768-4f50-b56e-4a298d5b4344'
 
+Below 2 variable values were not populated , please troubleshoot on same.
+$ARMOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile LabARM.json -labNamePrefix $labNamePrefix -sqlUsername $sqlUsername -sqlPassword $sqlPassword -logicAppEmail $logicAppEmail
+
+#ARM template outputs
+$storageName = $ARMOutput.Outputs.storageName.value
+$sqlServerName =  $ARMOutput.Outputs.sqlServerName.value
+
