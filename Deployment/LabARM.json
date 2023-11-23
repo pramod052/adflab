@@ -141,7 +141,7 @@
           "properties": {
             "edition": "DataWarehouse",
             "collation": "SQL_Latin1_General_CP1_CI_AS",
-            "requestedServiceObjectiveName": "DW100"
+            "requestedServiceObjectiveName": "DW100C"
           },
           "dependsOn": [
             "[variables('sqlServerName')]"
