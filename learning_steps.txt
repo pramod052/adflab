@@ -41,7 +41,7 @@ https://learn.microsoft.com/en-us/powershell/module/az.synapse/new-azsynapsesqld
 
 New-AzSynapseSqlDatabase -ResourceGroupName <RG name> -WorkspaceName <workspace name> -Name <DB Name>  
 
-requested_service_objective_name = "DW100c"
+requested_service_objective_name = "DW1000c"
 
 
     “SKU” stands for “Stock Keeping Unit.” 
