@@ -76,8 +76,8 @@ az storage blob upload -c "input" -f ".\Files\input\FAAaircraft\FAAaircraft.txt"
 
 
 #upload bacpacs to backups container for SQL Import
-Set-AzureStorageBlobContent -File "Files\backups\AirlinePerformance-OLTP.bacpac" -Container "backups" -Blob "AirlinePerformance-OLTP.bacpac" -Force
-Set-AzureStorageBlobContent -File ".\Files\backups\AirlinePerformance-ODS.bacpac" -Container "backups" -Blob "AirlinePerformance-ODS.bacpac" -Force
+#Set-AzureStorageBlobContent -File "Files\backups\AirlinePerformance-OLTP.bacpac" -Container "backups" -Blob "AirlinePerformance-OLTP.bacpac" -Force
+#Set-AzureStorageBlobContent -File ".\Files\backups\AirlinePerformance-ODS.bacpac" -Container "backups" -Blob "AirlinePerformance-ODS.bacpac" -Force
 
 az storage blob upload -c "backups" -f "Files\backups\AirlinePerformance-OLTP.bacpac" 
 az storage blob upload -c "backups" -f ".\Files\backups\AirlinePerformance-ODS.bacpac" 
@@ -85,36 +85,58 @@ az storage blob upload -c "backups" -f ".\Files\backups\AirlinePerformance-ODS.b
 
 
 #restore DBs to sql server
-$importRequest = New-AzureRmSqlDatabaseImport -ResourceGroupName $resourceGroupName `
-    -ServerName $sqlServerName `
-    -DatabaseName "AirlinePerformance-OLTP" `
-    -DatabaseMaxSizeBytes "262144000" `
-    -StorageKeyType "StorageAccessKey" `
-    -StorageKey $(Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -StorageAccountName $storageName).Value[0] `
-    -StorageUri "http://$storageName.blob.core.windows.net/backups/AirlinePerformance-OLTP.bacpac" `
-    -Edition "Standard" `
-    -ServiceObjectiveName "S3" `
-    -AdministratorLogin $sqlUsername `
-    -AdministratorLoginPassword $(ConvertTo-SecureString -String $sqlPassword -AsPlainText -Force)
+#$importRequest = New-AzureRmSqlDatabaseImport -ResourceGroupName $resourceGroupName `
+#    -ServerName $sqlServerName `
+#    -DatabaseName "AirlinePerformance-OLTP" `
+#    -DatabaseMaxSizeBytes "262144000" `
+#    -StorageKeyType "StorageAccessKey" `
+#    -StorageKey $(Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -StorageAccountName $storageName).Value[0] `
+#    -StorageUri "http://$storageName.blob.core.windows.net/backups/AirlinePerformance-OLTP.bacpac" `
+#    -Edition "Standard" `
+#    -ServiceObjectiveName "S3" `
+#    -AdministratorLogin $sqlUsername `
+#    -AdministratorLoginPassword $(ConvertTo-SecureString -String $sqlPassword -AsPlainText -Force)
 
-New-AzureRmSqlDatabaseImport -ResourceGroupName $resourceGroupName `
-    -ServerName $sqlServerName `
-    -DatabaseName "AirlinePerformance-ODS" `
-    -DatabaseMaxSizeBytes "262144000" `
-    -StorageKeyType "StorageAccessKey" `
-    -StorageKey $(Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -StorageAccountName $storageName).Value[0] `
-    -StorageUri "http://$storageName.blob.core.windows.net/backups/AirlinePerformance-ODS.bacpac" `
-    -Edition "Standard" `
-    -ServiceObjectiveName "S3" `
-    -AdministratorLogin $sqlUsername `
-    -AdministratorLoginPassword $(ConvertTo-SecureString -String $sqlPassword -AsPlainText -Force)
+    $importRequest = New-AzSqlDatabaseImport -ResourceGroupName $resourceGroupName `
+    -ServerName $sqlServerName -DatabaseName "AirlinePerformance-OLTP" `
+    -DatabaseMaxSizeBytes "262144000" -StorageKeyType "StorageAccessKey" `
+    -StorageKey $(Get-AzStorageAccountKey `
+        -ResourceGroupName $resourceGroupName -StorageAccountName $storageName).Value[0] `
+        -StorageUri "https://$storageName.blob.core.windows.net/backups/AirlinePerformance-OLTP.bacpac" `
+        -Edition "Standard" -ServiceObjectiveName "S3" `
+        -AdministratorLogin $sqlUsername `
+        -AdministratorLoginPassword $(ConvertTo-SecureString -String $sqlPassword -AsPlainText -Force)
+
+#New-AzureRmSqlDatabaseImport -ResourceGroupName $resourceGroupName `
+    #-ServerName $sqlServerName `
+   # -DatabaseName "AirlinePerformance-ODS" `
+   # -DatabaseMaxSizeBytes "262144000" `
+   # -StorageKeyType "StorageAccessKey" `
+   # -StorageKey $(Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -StorageAccountName $storageName).Value[0] `
+   # -StorageUri "http://$storageName.blob.core.windows.net/backups/AirlinePerformance-ODS.bacpac" `
+   # -Edition "Standard" `
+   # -ServiceObjectiveName "S3" `
+   # -AdministratorLogin $sqlUsername `
+   # -AdministratorLoginPassword $(ConvertTo-SecureString -String $sqlPassword -AsPlainText -Force)
+
+    New-AzSqlDatabaseImport -ResourceGroupName $resourceGroupName `
+    -ServerName $sqlServerName -DatabaseName "AirlinePerformance-ODS" `
+    -DatabaseMaxSizeBytes "262144000" -StorageKeyType "StorageAccessKey" `
+    -StorageKey $(Get-AzStorageAccountKey `
+        -ResourceGroupName $resourceGroupName -StorageAccountName $storageName).Value[0] `
+        -StorageUri "https://$storageName.blob.core.windows.net/backups/AirlinePerformance-ODS.bacpac" `
+        -Edition "Standard" -ServiceObjectiveName "S3" `
+        -AdministratorLogin $sqlUsername `
+        -AdministratorLoginPassword $(ConvertTo-SecureString -String $sqlPassword -AsPlainText -Force)
+
 
 #Get external IP for Azure firewall via web client call
 $wc=New-Object net.webclient
 $myIP = $wc.downloadstring("http://checkip.dyndns.com") -replace "[^\d\.]"
 
 #add current ip to SQL firewall rule
-New-AzureRMSqlServerFirewallRule -ServerName $sqlServerName -FirewallRuleName "LabUserFirewall" -StartIpAddress $myIP -EndIpAddress $myIP -ResourceGroupName $resourceGroupName
+#New-AzureRMSqlServerFirewallRule -ServerName $sqlServerName -FirewallRuleName "LabUserFirewall" -StartIpAddress $myIP -EndIpAddress $myIP -ResourceGroupName $resourceGroupName
+az sql server firewall-rule create -g $resourceGroupName -s $sqlServerName -n "LabUserFirewall" --start-ip-address $myIP --end-ip-address $myIP
 
 #login creation for Azure DB
 Invoke-Sqlcmd  -Query "CREATE LOGIN DWLoadUser WITH PASSWORD = '$sqlPassword'" -ServerInstance "$sqlServerName.database.windows.net" -Database "master" -Username $sqlUsername -Password $sqlPassword
@@ -123,12 +145,20 @@ Invoke-Sqlcmd  -Query "CREATE LOGIN DWLoadUser WITH PASSWORD = '$sqlPassword'" -
 Invoke-Sqlcmd -inputFile "CreateAzureDW.sql" -ServerInstance "$sqlServerName.database.windows.net" -Database "AirlinePerformance-DW" -Username $sqlUsername -Password $sqlPassword
 
 #loop until OLTP restore is done before marking done
-$importStatus = Get-AzureRmSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+#$importStatus = Get-AzureRmSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+
+$importStatus = Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
 Write-Host "OLTP DB Restoring..."
+
+
 while ($importStatus.Status -eq "InProgress")
 {
-    $importStatus = Get-AzureRmSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+#    $importStatus = Get-AzureRmSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+    $importStatus = Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
     Write-Host -NoNewLine "."
     Start-Sleep -s 60
 }
  Write-Host "Lab deployment complete!"
+
+
+
