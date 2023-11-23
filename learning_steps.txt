@@ -22,6 +22,23 @@ Practice creating ARM template manually by editing for practicing JSON/ARM templ
     "resources": [],
     "outputs": {}
 
+ARM deployment went fine till OLTP and ODW databases but failed with below error to use Azure synapse.
+
+PS C:\Users\vmadmin\Desktop\adflab\Deployment> $ARMOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile LabARM.json -labNamePrefix $labNamePrefix -sqlUsername $sqlUsername -sqlPassword $sqlPassword -logicAppEmail $logicAppEmail
+
+New-AzResourceGroupDeployment : 5:06:28 AM - The deployment 'LabARM' failed with error(s). Showing 1 out of 1 error(s).
+Status Message: Azure SQL Data Warehouse Gen1 has been deprecated in this region. Please use SQL Analytics in Azure Synapse. (Code: 45122)
+ - Azure SQL Data Warehouse Gen1 has been deprecated in this region. Please use SQL Analytics in Azure Synapse. (Code:45122)
+CorrelationId: b43b071f-f0d2-41cf-b429-345a92c88239
+At line:1 char:14
++ ... ARMOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourc ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [New-AzResourceGroupDeployment], Exception
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+
+
+
+
     “SKU” stands for “Stock Keeping Unit.” 
     It refers to a specific version or offering of a resource that is available in Azure
 
