@@ -132,4 +132,9 @@ All the above issues are resolved now, entire script is working is fine without 
 
 Now install SSMS (SQL server management studio on jumpbox).
 
+ODS is Pre-Processing database -> To Load data directly from Externl sources.
+Processing into -> Staging Database.
+Store in DW database.
+
+
 
